@@ -1,0 +1,42 @@
+name: SkyBeeGuard
+version: 2.2
+author: Hakuyamu
+main: com.hakuyamu.skybee.guard.Guard
+api-version: 1.17
+depend:
+  - WorldGuard
+  - WorldEdit
+
+commands:
+  aacn:
+    permission: skybee.guard.console
+    permission-message: ""
+  kickall:
+    permission: skybee.guard.console
+    permission-message: "§cGuard §8» §cDu hast keine Rechte für diesen Befehl."
+  lookup:
+    permission: skybee.guard.command.lookup
+    permission-message: "§cGuard §8» §cDu hast keine Rechte für diesen Befehl."
+  kontrolle:
+    permission: skybee.guard.command.kontrolle
+    permission-message: "§cGuard §8» §cDu hast keine Rechte für diesen Befehl."
+  countentity:
+    permission: skybee.guard.command.countentity
+    permission-message: "§cGuard §8» §cDu hast keine Rechte für diesen Befehl."
+    aliases: [ce]
+  gc:
+    permission: essentials.gc
+
+permissions:
+  skybee.guard.alert.aacn:
+    description: aacn alert
+  skybee.guard.alert.kick:
+    description: kick alert
+  skybee.guard.bypass.antibot:
+    description: antibot bypass
+  skybee.guard.bypass.kickall:
+    description: kickall bypass
+  skybee.guard.bypass.full:
+    description: full bypass
+  skybee.guard.bypass.whitelist:
+    description: whitelist bypass
