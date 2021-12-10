@@ -1,7 +1,7 @@
 name: SkyBeeGuard
 version: 2.2
 author: Hakuyamu
-main: com.hakuyamu.skybee.guard.Guard
+main: de.leonheuer.skycave.guard.Guard
 api-version: 1.17
 depend:
   - WorldGuard
