@@ -48,7 +48,7 @@ public class Utils {
         if (pos > -1) {
             original = original.substring(0, pos) +
                     replacement +
-                    original.substring(pos + replacement.length());
+                    original.substring(pos + part.length());
         }
         return original;
     }
@@ -63,7 +63,7 @@ public class Utils {
         words = words.replaceAll("minute", "Minute,");
         words = words.replaceAll("seconds", "Sekunden");
         words = words.replaceAll("second", "Sekunde");
-        return replaceLast(words, ",", " und ");
+        return replaceLast(words, ",", " und");
     }
 
 }
