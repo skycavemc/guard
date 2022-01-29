@@ -63,7 +63,7 @@ public class Utils {
         words = words.replaceAll("minute", "Minute,");
         words = words.replaceAll("seconds", "Sekunden");
         words = words.replaceAll("second", "Sekunde");
-        return replaceLast(words, ",", "und");
+        return replaceLast(words, ",", " und ");
     }
 
 }
