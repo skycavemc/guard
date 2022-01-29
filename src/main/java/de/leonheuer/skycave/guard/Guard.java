@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,8 +35,8 @@ public class Guard extends JavaPlugin {
 
         registerCommand("aacn", NotifyCommand.class);
         registerCommand("kickall", KickallCommand.class);
-        registerCommand("lookup", LookupCommand.class);
-        registerCommand("kontrolle", KontrolleCommand.class);
+        registerCommand("lookup", LookupCommand.class, this);
+        registerCommand("kontrolle", KontrolleCommand.class, this);
         registerCommand("countentity", CountEntityCommand.class);
         registerCommand("gc", GCCommand.class);
     }
@@ -45,15 +46,20 @@ public class Guard extends JavaPlugin {
         dataManager.saveTimeProfile();
     }
 
-    private void registerCommand(String command, Class<? extends CommandExecutor> clazz) {
+    private <T extends CommandExecutor> void registerCommand(String command, Class<T> clazz, Object... parameters) {
         PluginCommand cmd = this.getCommand(command);
         if (cmd == null) {
             getLogger().severe("The command /" + command + " was not found in the plugin.yml.");
             return;
         }
         try {
-            cmd.setExecutor(clazz.getDeclaredConstructor().newInstance());
-        } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            Constructor<T> constructor = clazz.getDeclaredConstructor(parameters.getClass());
+            cmd.setExecutor(constructor.newInstance(parameters));
+        } catch (NoSuchMethodException e) {
+            getLogger().severe(
+                    "No constructor for the executor class of /" + command +
+                    " (Class name: " + clazz.getName() + ") matches the specified parameters.");
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
     }
