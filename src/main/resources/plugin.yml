@@ -1,11 +1,9 @@
-name: SkyBeeGuard
-version: 2.2
-author: Hakuyamu
+name: SkyCaveGuard
+version: '${version}'
 main: de.leonheuer.skycave.guard.Guard
-api-version: 1.17
-depend:
-  - WorldGuard
-  - WorldEdit
+api-version: 1.18
+depend: [ WorldGuard, WorldEdit ]
+authors: [ Hakuyamu ]
 
 commands:
   aacn:
@@ -23,7 +21,7 @@ commands:
   countentity:
     permission: skybee.guard.command.countentity
     permission-message: "§cGuard §8» §cDu hast keine Rechte für diesen Befehl."
-    aliases: [ce]
+    aliases: [ ce ]
   gc:
     permission: essentials.gc
 
