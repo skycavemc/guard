@@ -1,9 +1,8 @@
 package de.leonheuer.skycave.guard.storage;
 
-import de.leonheuer.skycave.guard.Guard;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -12,43 +11,42 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class DataManager {
 
-    private final Guard main;
     private final String path = "plugins/SkyBeeGuard/playerdata/";
     private final String path2 = "plugins/SkyBeeGuard/";
     private final HashMap<UUID, PlayerProfile> profiles = new HashMap<>();
-    private final HashMap<UUID, String> ipmap = new HashMap<>();
+    private final HashMap<UUID, String> ipMap = new HashMap<>();
     private final TimeProfile timeProfile;
 
-    public DataManager(Guard main) {
-        this.main = main;
+    public DataManager() {
         File dir = new File(path);
         JSONParser jsonParser = new JSONParser();
         if (dir.exists()) {
-            if (dir.listFiles() != null) {
-                for (File file : dir.listFiles()) {
+            File[] files = dir.listFiles();
+            if (files != null) {
+                for (File file : files) {
                     String[] fileName = file.getName().split("\\.");
                     UUID uuid = UUID.fromString(fileName[0]);
                     try (FileReader reader = new FileReader(file)) {
                         JSONObject data = (JSONObject) jsonParser.parse(reader);
-                        ipmap.put(uuid, (String) data.get("ip"));
+                        ipMap.put(uuid, (String) data.get("ip"));
                     } catch (IOException | ParseException e) {
                         e.printStackTrace();
                     }
                 }
             }
         } else {
+            //noinspection ResultOfMethodCallIgnored
             dir.mkdirs();
         }
         File file = new File(path2 + "lastcontol.json");
-        timeProfile = new TimeProfile(this, null, null);
+        timeProfile = new TimeProfile(null, null);
         if (file.exists()) {
             try (FileReader reader = new FileReader(file)) {
                 JSONObject data = (JSONObject) jsonParser.parse(reader);
@@ -59,6 +57,7 @@ public class DataManager {
             }
         } else {
             try {
+                //noinspection ResultOfMethodCallIgnored
                 file.createNewFile();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -68,8 +67,16 @@ public class DataManager {
 
     public void readPlayerData(Player player) {
         UUID uuid = player.getUniqueId();
-        PlayerProfile profile = new PlayerProfile(0, uuid, player.getAddress().getAddress(), this);
-        File file = new File(path, uuid.toString() + ".json");
+        InetSocketAddress address = player.getAddress();
+        InetAddress ip;
+        if (address == null || address.getAddress() == null) {
+            ip = null;
+        } else {
+            ip = address.getAddress();
+            ipMap.put(uuid, ip.toString());
+        }
+        PlayerProfile profile = new PlayerProfile(0, uuid, ip, this);
+        File file = new File(path, uuid + ".json");
         if (file.exists()) {
             JSONParser jsonParser = new JSONParser();
             try (FileReader reader = new FileReader(file)) {
@@ -79,7 +86,6 @@ public class DataManager {
                 e.printStackTrace();
             }
         }
-        ipmap.put(uuid, player.getAddress().getAddress().toString());
         profiles.put(uuid, profile);
     }
     
@@ -89,6 +95,7 @@ public class DataManager {
 
         if (!file.exists()) {
             try {
+                //noinspection ResultOfMethodCallIgnored
                 file.createNewFile();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -110,29 +117,33 @@ public class DataManager {
         profiles.remove(uuid);
     }
 
-    public PlayerProfile getPlayerProfile(UUID uuid) {
-        if (!profiles.containsKey(uuid)) {
-            readPlayerData(Bukkit.getPlayer(uuid));
-        }
-        return profiles.get(uuid);
-    }
-
+    @Nullable
     public PlayerProfile getPlayerProfile(Player player) {
-        return profiles.getOrDefault(player.getUniqueId(), new PlayerProfile(0, player.getUniqueId(), player.getAddress().getAddress(), this));
+        if (!profiles.containsKey(player.getUniqueId())) {
+            readPlayerData(player);
+        }
+        return profiles.getOrDefault(player.getUniqueId(), null);
     }
 
-    public List<UUID> getIPMatches(UUID initial, String ip) {
+    /**
+     * Gets a list of all UUIDs belonging to players who have joined the server under the specified IP address.
+     * @param exclude The uuid of the player to exclude
+     * @param ip The IP address (as a String) to get all matching UUIDs for
+     * @return The list of matching UUIDs
+     */
+    public List<UUID> whoJoinedWithIP(UUID exclude, @NotNull String ip) {
         List<UUID> matches = new ArrayList<>();
-        for (UUID uuid : ipmap.keySet()) {
-            if (!uuid.toString().equalsIgnoreCase(initial.toString()) && ipmap.get(uuid).equals(ip)) {
-                matches.add(uuid);
+        for (Map.Entry<UUID, String> entry : ipMap.entrySet()) {
+            if (entry.getKey() != exclude && entry.getValue().equals(ip)) {
+                matches.add(entry.getKey());
             }
         }
         return matches;
     }
 
+    @Nullable
     public String getOfflineIP(UUID uuid) {
-        return ipmap.getOrDefault(uuid, null);
+        return ipMap.getOrDefault(uuid, null);
     }
 
     public TimeProfile getTimeProfile() {
@@ -145,6 +156,7 @@ public class DataManager {
 
         if (!file.exists()) {
             try {
+                //noinspection ResultOfMethodCallIgnored
                 file.createNewFile();
             } catch (IOException e) {
                 e.printStackTrace();

@@ -4,12 +4,10 @@ import java.time.LocalDateTime;
 
 public class TimeProfile {
 
-    private final DataManager dm;
     private LocalDateTime time;
     private String name;
 
-    public TimeProfile(DataManager dm, LocalDateTime time, String name) {
-        this.dm = dm;
+    public TimeProfile(LocalDateTime time, String name) {
         this.time = time;
         this.name = name;
     }

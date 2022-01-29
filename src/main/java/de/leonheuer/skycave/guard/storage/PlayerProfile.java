@@ -6,8 +6,8 @@ import java.util.UUID;
 public class PlayerProfile {
 
     private final UUID uuid;
-    private final InetAddress ip;
     private final DataManager dm;
+    private InetAddress ip;
     private int afk;
 
     public PlayerProfile(int afk, UUID uuid, InetAddress ip, DataManager dm) {
@@ -27,27 +27,16 @@ public class PlayerProfile {
         dm.writePlayerData(this);
     }
 
-    public void addAfk() {
-        afk++;
-        dm.writePlayerData(this);
+    public InetAddress getIp() {
+        return ip;
     }
 
-    public boolean removeAfk() {
-        if (afk > 0) {
-            afk--;
-            dm.writePlayerData(this);
-            return true;
-        } else {
-            return false;
-        }
+    public void setIp(InetAddress ip) {
+        this.ip = ip;
+        dm.writePlayerData(this);
     }
 
     public UUID getUuid() {
         return uuid;
     }
-
-    public InetAddress getIp() {
-        return ip;
-    }
-
 }

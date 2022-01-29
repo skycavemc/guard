@@ -1,7 +1,8 @@
 package de.leonheuer.skycave.guard.listener;
 
 import de.leonheuer.skycave.guard.Guard;
-import de.leonheuer.skycave.guard.util.Message;
+import de.leonheuer.skycave.guard.enums.Message;
+import de.leonheuer.skycave.guard.utils.Utils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -18,6 +19,7 @@ public class PlayerLoginListener implements Listener {
         this.main = main;
     }
 
+    @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerLogin(PlayerLoginEvent event) {
         Player player = event.getPlayer();
@@ -27,14 +29,14 @@ public class PlayerLoginListener implements Listener {
                 event.allow();
             } else {
                 event.setKickMessage(Message.KICK_FULL.getMessage());
-                main.getUtil().notifyStaff(Message.NOTIFIER_FULL_SERVER, player);
+                Utils.notifyStaff(Message.NOTIFIER_FULL_SERVER, player);
             }
         } else if (event.getResult() == PlayerLoginEvent.Result.KICK_WHITELIST) {
             if (player.hasPermission("skybee.guard.bypass.whitelist")) {
                 event.allow();
             } else {
                 event.setKickMessage(Message.KICK_WHITELIST.getMessage());
-                main.getUtil().notifyStaff(Message.NOTIFIER_WHITELIST, player);
+                Utils.notifyStaff(Message.NOTIFIER_WHITELIST, player);
             }
         } else {
             if (lastAntiBotCheck == null) {
@@ -52,7 +54,7 @@ public class PlayerLoginListener implements Listener {
                 if (joinedAntiBotCheck > 4) {
                     if (!(player.hasPermission("skybee.guard.bypass.antibot"))) {
                         event.disallow(PlayerLoginEvent.Result.KICK_OTHER, Message.KICK_ANTIBOT.getMessage());
-                        main.getUtil().notifyStaff(Message.NOTIFIER_ANTIBOT, player);
+                        Utils.notifyStaff(Message.NOTIFIER_ANTIBOT, player);
                     }
                 }
             }

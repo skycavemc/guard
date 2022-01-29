@@ -1,6 +1,6 @@
 package de.leonheuer.skycave.guard.commands;
 
-import de.leonheuer.skycave.guard.util.Message;
+import de.leonheuer.skycave.guard.enums.Message;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -12,6 +12,7 @@ import static org.bukkit.Bukkit.getOnlinePlayers;
 
 public class KickallCommand implements CommandExecutor {
 
+    @SuppressWarnings("deprecation")
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String arg, String[] args) {
         if (!(sender instanceof Player)) {

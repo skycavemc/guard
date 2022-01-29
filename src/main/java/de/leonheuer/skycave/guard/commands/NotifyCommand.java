@@ -1,6 +1,6 @@
 package de.leonheuer.skycave.guard.commands;
 
-import de.leonheuer.skycave.guard.util.Message;
+import de.leonheuer.skycave.guard.enums.Message;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

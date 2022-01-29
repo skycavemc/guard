@@ -19,21 +19,22 @@ public class PlayerJoinLeaveListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        main.getDm().readPlayerData(event.getPlayer());
+        main.getDataManager().readPlayerData(event.getPlayer());
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        main.getDm().unloadPlayerData(event.getPlayer().getUniqueId());
-        main.getUtil().removeSpec(event.getPlayer());
+        main.getDataManager().unloadPlayerData(event.getPlayer().getUniqueId());
+        main.spectators.remove(event.getPlayer());
     }
 
+    @SuppressWarnings({"UnstableApiUsage", "deprecation"})
     @EventHandler
     public void onPlayerKick(PlayerKickEvent event) {
         event.setCancelled(true);
 
-        main.getDm().unloadPlayerData(event.getPlayer().getUniqueId());
-        main.getUtil().removeSpec(event.getPlayer());
+        main.getDataManager().unloadPlayerData(event.getPlayer().getUniqueId());
+        main.spectators.remove(event.getPlayer());
 
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("Connect");

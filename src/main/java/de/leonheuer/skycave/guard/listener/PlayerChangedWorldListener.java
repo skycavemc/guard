@@ -1,6 +1,7 @@
 package de.leonheuer.skycave.guard.listener;
 
 import de.leonheuer.skycave.guard.Guard;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,13 +20,8 @@ public class PlayerChangedWorldListener implements Listener {
     @EventHandler
     public void onPlayerWorldChange(PlayerChangedWorldEvent event) {
         Player player = event.getPlayer();
-        if (main.getUtil().isSpec(player)) {
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    player.setGameMode(GameMode.SPECTATOR);
-                }
-            }.runTaskLater(main, 2L);
+        if (main.spectators.contains(player)) {
+            Bukkit.getScheduler().runTaskLater(main, () -> player.setGameMode(GameMode.SPECTATOR), 2);
         }
     }
 

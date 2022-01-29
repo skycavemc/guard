@@ -1,4 +1,4 @@
-package de.leonheuer.skycave.guard.util;
+package de.leonheuer.skycave.guard.enums;
 
 import org.bukkit.ChatColor;
 
@@ -34,26 +34,11 @@ public enum Message {
     KICKALL_PROCESS("&cKicke alle Spieler..."),
     KICKALL_REASON("&cBitte gib einen Grund an!"),
 
-    // afkcount help
-    AFKCOUNT_HELP_ADD("&b/afkcount add <spieler>\n&8» &7Fügt einen Verstoß hinzu"),
-    AFKCOUNT_HELP_REMOVE("&b/afkcount remove <spieler>\n&8» &7Entfernt einen Verstoß"),
-    AFKCOUNT_HELP_CLEAR("&b/afkcount clear <spieler>\n&8» &7Entfernt alle Verstöße"),
-    AFKCOUNT_HELP_COUNT("&b/afkcount count <spieler>\n&8» &7Zeigt die Anzahl der Verstöße an"),
-    AFKCOUNT_HELP_HELP("&b/afkcount help\n&8» &7Zeigt Hilfe an"),
-    AFKCOUNT_ARGS_NOEXIST("&cUngültiges Argument. Siehe /afkcount help"),
-
-    // afkcount subcommands
-    AFKCOUNT_ADD_SUCCESS("&7Dem Spieler &c%player &7wurde ein Verstoß hinzugefügt. Stand: §c%count"),
-    AFKCOUNT_REMOVE_SUCCESS("&7Dem Spieler &a%player &7wurde ein Verstoß entfernt. Stand: §a%count"),
-    AFKCOUNT_REMOVE_ERROR("&cDer Spieler %player hat keine Verstöße."),
-    AFKCOUNT_CLEAR_SUCCESS("&7Die Verstöße von &a%player &7wurden zurückgesetzt."),
-    AFKCOUNT_COUNT_OTHER("&7Der Spieler &e%player &7hat &e%count &7Verstöße."),
-    AFKCOUNT_COUNT("&7Du hast &e%count &7Verstöße"),
-
     // lookup command
     LOOKUP_ACCOUNTS("&eAccounts von &c%player&7: &7%accounts"),
     LOOKUP_UNKNOWN("&cDer Spieler %player ist unbekannt."),
     LOOKUP_MISSING("&cBitte gib einen Name an."),
+    LOOKUP_IP_NOT_FOUND("&cDie IP-Adresse des Spielers %player ist unbekannt."),
 
     // kontrolle command
     KONTROLLE_NODATA("&cEs hat noch keine Kontrolle stattgefunden."),

@@ -1,7 +1,7 @@
 package de.leonheuer.skycave.guard.commands;
 
 import de.leonheuer.skycave.guard.Guard;
-import de.leonheuer.skycave.guard.util.Message;
+import de.leonheuer.skycave.guard.enums.Message;
 import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -33,17 +33,17 @@ public class KontrolleCommand implements CommandExecutor, TabCompleter {
             if (sender instanceof Player player) {
                 switch (args[0]) {
                     case "now":
-                        main.getDm().getTimeProfile().setTime(LocalDateTime.now());
-                        main.getDm().getTimeProfile().setName(player.getName());
+                        main.getDataManager().getTimeProfile().setTime(LocalDateTime.now());
+                        main.getDataManager().getTimeProfile().setName(player.getName());
                         player.sendMessage(Message.KONTROLLE_SETNOW.getWithPrefix());
                         break;
                     case "spec":
-                        if (main.getUtil().isSpec(player)) {
-                            main.getUtil().removeSpec(player);
+                        if (main.spectators.contains(player)) {
+                            main.spectators.remove(player);
                             player.setGameMode(GameMode.SURVIVAL);
                             player.sendMessage(Message.KONTROLLE_SPEC_LEAVE.getWithPrefix());
                         } else {
-                            main.getUtil().addSpec(player);
+                            main.spectators.add(player);
                             player.setGameMode(GameMode.SPECTATOR);
                             player.sendMessage(Message.KONTROLLE_SPEC_ENTER.getWithPrefix());
                         }
@@ -55,8 +55,8 @@ public class KontrolleCommand implements CommandExecutor, TabCompleter {
                 main.getLogger().severe("Nur Spieler haben Zugriff auf diesen Befehl.");
             }
         } else {
-            LocalDateTime time = main.getDm().getTimeProfile().getTime();
-            String name = main.getDm().getTimeProfile().getName();
+            LocalDateTime time = main.getDataManager().getTimeProfile().getTime();
+            String name = main.getDataManager().getTimeProfile().getName();
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy, hh:mm:ss");
             if (time != null) {
                 long hours = ChronoUnit.HOURS.between(time, LocalDateTime.now());
