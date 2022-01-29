@@ -29,14 +29,14 @@ public class PlayerLoginListener implements Listener {
                 event.allow();
             } else {
                 event.setKickMessage(Message.KICK_FULL.getMessage());
-                Utils.notifyStaff(Message.NOTIFIER_FULL_SERVER, player);
+                Utils.notifyStaff(Message.NOTIFIER_FULL_SERVER.getWithPrefix().replaceAll("%p", player.getName()));
             }
         } else if (event.getResult() == PlayerLoginEvent.Result.KICK_WHITELIST) {
             if (player.hasPermission("skybee.guard.bypass.whitelist")) {
                 event.allow();
             } else {
                 event.setKickMessage(Message.KICK_WHITELIST.getMessage());
-                Utils.notifyStaff(Message.NOTIFIER_WHITELIST, player);
+                Utils.notifyStaff(Message.NOTIFIER_WHITELIST.getWithPrefix().replaceAll("%p", player.getName()));
             }
         } else {
             if (lastAntiBotCheck == null) {
@@ -54,7 +54,7 @@ public class PlayerLoginListener implements Listener {
                 if (joinedAntiBotCheck > 4) {
                     if (!(player.hasPermission("skybee.guard.bypass.antibot"))) {
                         event.disallow(PlayerLoginEvent.Result.KICK_OTHER, Message.KICK_ANTIBOT.getMessage());
-                        Utils.notifyStaff(Message.NOTIFIER_ANTIBOT, player);
+                        Utils.notifyStaff(Message.NOTIFIER_ANTIBOT.getWithPrefix().replaceAll("%p", player.getName()));
                     }
                 }
             }

@@ -52,6 +52,7 @@ public class CountEntityCommand implements CommandExecutor, TabCompleter {
                 return true;
             }
 
+
             ProtectedRegion rg = rm.getRegion(args[1]);
             if (rg == null) {
                 sender.sendMessage(Message.COUNTENTITY_REGION_INVALID.getWithPrefix()
@@ -60,25 +61,27 @@ public class CountEntityCommand implements CommandExecutor, TabCompleter {
                 return true;
             }
 
+            int villager = 0;
             int living = 0;
             int item = 0;
-            int villager = 0;
             int misc = 0;
 
-            for (Entity e : world.getNearbyEntities(Utils.regionToBoundingBox(world, rg))) {
-                if (e instanceof Villager) {
-                    villager++;
-                    continue;
+            for (Entity e : world.getEntities()) {
+                if (rg.contains(BukkitAdapter.asBlockVector(e.getLocation()))) {
+                    if (e instanceof Villager) {
+                        villager++;
+                        continue;
+                    }
+                    if (e instanceof LivingEntity) {
+                        living++;
+                        continue;
+                    }
+                    if (e instanceof Item) {
+                        item++;
+                        continue;
+                    }
+                    misc++;
                 }
-                if (e instanceof LivingEntity) {
-                    living++;
-                    continue;
-                }
-                if (e instanceof Item) {
-                    item++;
-                    continue;
-                }
-                misc++;
             }
             sender.sendMessage(Message.COUNTENTITY_REGION_HEADER.getWithPrefix().replaceAll("%region", rg.getId()));
             sender.sendMessage(Message.COUNTENTITY_REGION_OUTPUT.getMessage()
