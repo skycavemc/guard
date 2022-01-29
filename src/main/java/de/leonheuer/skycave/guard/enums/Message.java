@@ -43,7 +43,7 @@ public enum Message {
     // kontrolle command
     KONTROLLE_NODATA("&cEs hat noch keine Kontrolle stattgefunden."),
     KONTROLLE_SETNOW("&aZeitpunkt der Kontrolle gesetzt."),
-    KONTROLLE_TIME("&eLetzte Kontrolle: &7%time &8(&7vor &c%h Stunden %m Minuten&8) &7von &c%player"),
+    KONTROLLE_TIME("&eLetzte Kontrolle: &7%time &8(&7vor &c%duration&8) &7von &c%player"),
     KONTROLLE_SPEC_ENTER("&bDu betrittst den Zuschauermodus."),
     KONTROLLE_SPEC_LEAVE("&eDu verlässt den Zuschauermodus."),
     KONTROLLE_WRONGARGS("&cUngültiges Argument. Verfügbar: /kontrolle spec, /kontrolle now"),

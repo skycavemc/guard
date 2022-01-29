@@ -1,7 +1,11 @@
 package de.leonheuer.skycave.guard.commands;
 
+import com.ibm.icu.impl.duration.DurationFormatter;
+import com.ibm.icu.impl.duration.DurationFormatterFactory;
 import de.leonheuer.skycave.guard.Guard;
 import de.leonheuer.skycave.guard.enums.Message;
+import de.leonheuer.skycave.guard.utils.Utils;
+import org.apache.commons.lang.time.DurationFormatUtils;
 import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -12,6 +16,7 @@ import org.bukkit.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -57,15 +62,12 @@ public class KontrolleCommand implements CommandExecutor, TabCompleter {
         } else {
             LocalDateTime time = main.getDataManager().getTimeProfile().getTime();
             String name = main.getDataManager().getTimeProfile().getName();
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy, hh:mm:ss");
             if (time != null) {
-                long hours = ChronoUnit.HOURS.between(time, LocalDateTime.now());
-                time = time.plusHours(hours);
-                long minutes = ChronoUnit.MINUTES.between(time, LocalDateTime.now());
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yy, hh:mm");
+                Duration duration = Duration.between(time, LocalDateTime.now());
                 sender.sendMessage(Message.KONTROLLE_TIME.getWithPrefix()
                         .replaceAll("%time", time.format(dtf))
-                        .replaceAll("%h", String.valueOf(hours))
-                        .replaceAll("%m", String.valueOf(minutes))
+                        .replaceAll("%duration", Utils.formatDuration(duration))
                         .replaceAll("%player", name));
             } else {
                 sender.sendMessage(Message.KONTROLLE_NODATA.getWithPrefix());

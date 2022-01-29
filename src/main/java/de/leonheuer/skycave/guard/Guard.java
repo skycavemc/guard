@@ -12,8 +12,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,12 +31,12 @@ public class Guard extends JavaPlugin {
 
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
-        registerCommand("aacn", NotifyCommand.class);
-        registerCommand("kickall", KickallCommand.class);
-        registerCommand("lookup", LookupCommand.class, this);
-        registerCommand("kontrolle", KontrolleCommand.class, this);
-        registerCommand("countentity", CountEntityCommand.class);
-        registerCommand("gc", GCCommand.class);
+        registerCommand("aacn", new NotifyCommand());
+        registerCommand("kickall", new KickallCommand());
+        registerCommand("lookup", new LookupCommand(this));
+        registerCommand("kontrolle", new KontrolleCommand(this));
+        registerCommand("countentity", new CountEntityCommand());
+        registerCommand("gc", new GCCommand());
     }
 
     @Override
@@ -46,22 +44,13 @@ public class Guard extends JavaPlugin {
         dataManager.saveTimeProfile();
     }
 
-    private <T extends CommandExecutor> void registerCommand(String command, Class<T> clazz, Object... parameters) {
+    private void registerCommand(String command, CommandExecutor executor) {
         PluginCommand cmd = this.getCommand(command);
         if (cmd == null) {
             getLogger().severe("The command /" + command + " was not found in the plugin.yml.");
             return;
         }
-        try {
-            Constructor<T> constructor = clazz.getDeclaredConstructor(parameters.getClass());
-            cmd.setExecutor(constructor.newInstance(parameters));
-        } catch (NoSuchMethodException e) {
-            getLogger().severe(
-                    "No constructor for the executor class of /" + command +
-                    " (Class name: " + clazz.getName() + ") matches the specified parameters.");
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
-        }
+        cmd.setExecutor(executor);
     }
 
     public DataManager getDataManager() {
