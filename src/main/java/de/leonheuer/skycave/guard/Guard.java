@@ -1,6 +1,7 @@
 package de.leonheuer.skycave.guard;
 
 import de.leonheuer.skycave.guard.commands.*;
+import de.leonheuer.skycave.guard.listener.BlockFertilizeListener;
 import de.leonheuer.skycave.guard.listener.PlayerChangedWorldListener;
 import de.leonheuer.skycave.guard.listener.PlayerJoinLeaveListener;
 import de.leonheuer.skycave.guard.listener.PlayerLoginListener;
@@ -28,6 +29,7 @@ public class Guard extends JavaPlugin {
         pm.registerEvents(new PlayerLoginListener(this), this);
         pm.registerEvents(new PlayerJoinLeaveListener(this), this);
         pm.registerEvents(new PlayerChangedWorldListener(this), this);
+        pm.registerEvents(new BlockFertilizeListener(), this);
 
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
