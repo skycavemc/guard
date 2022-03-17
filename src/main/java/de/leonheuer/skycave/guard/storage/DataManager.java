@@ -65,7 +65,7 @@ public class DataManager {
         }
     }
 
-    public void readPlayerData(Player player) {
+    public void readPlayerData(@NotNull Player player) {
         UUID uuid = player.getUniqueId();
         InetSocketAddress address = player.getAddress();
         InetAddress ip;
@@ -89,6 +89,7 @@ public class DataManager {
         profiles.put(uuid, profile);
     }
     
+    @SuppressWarnings("unchecked")
     public void writePlayerData(@NotNull PlayerProfile profile) {
         File file = new File(path, profile.getUuid().toString() + ".json");
         JSONObject data = new JSONObject();
@@ -118,7 +119,7 @@ public class DataManager {
     }
 
     @Nullable
-    public PlayerProfile getPlayerProfile(Player player) {
+    public PlayerProfile getPlayerProfile(@NotNull Player player) {
         if (!profiles.containsKey(player.getUniqueId())) {
             readPlayerData(player);
         }
@@ -150,6 +151,7 @@ public class DataManager {
         return timeProfile;
     }
 
+    @SuppressWarnings("unchecked")
     public void saveTimeProfile() {
         File file = new File(path2, "lastcontol.json");
         JSONObject data = new JSONObject();
