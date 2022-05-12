@@ -146,7 +146,7 @@ public class CountEntityCommand implements CommandExecutor, TabCompleter {
 
     @Nullable
     @Override
-    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args) {
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String @NotNull [] args) {
         List<String> arguments = new ArrayList<>();
         List<String> completions = new ArrayList<>();
 
@@ -154,6 +154,10 @@ public class CountEntityCommand implements CommandExecutor, TabCompleter {
             Arrays.stream(EntityType.values()).forEach(type -> arguments.add(type.toString().toLowerCase()));
             Bukkit.getWorlds().forEach(world -> arguments.add("-w:" + world.getName()));
             StringUtil.copyPartialMatches(args[0], arguments, completions);
+        }
+        if (args.length == 3) {
+            Arrays.stream(EntityType.values()).forEach(type -> arguments.add(type.toString().toLowerCase()));
+            StringUtil.copyPartialMatches(args[2], arguments, completions);
         }
 
         Collections.sort(completions);
