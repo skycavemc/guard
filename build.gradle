@@ -3,7 +3,7 @@ plugins {
 }
 
 group 'de.leonheuer.skycave'
-version '2.0.4'
+version '2.0.5'
 
 repositories {
     mavenCentral()
@@ -15,7 +15,7 @@ dependencies {
     implementation 'org.jetbrains:annotations:23.0.0'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
-    compileOnly 'io.papermc.paper:paper-api:1.18.1-R0.1-SNAPSHOT'
+    compileOnly 'io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT'
     compileOnly 'com.sk89q.worldedit:worldedit-bukkit:7.2.7-SNAPSHOT'
     compileOnly 'com.sk89q.worldguard:worldguard-bukkit:7.0.6-SNAPSHOT'
     compileOnly 'com.googlecode.json-simple:json-simple:1.1.1'

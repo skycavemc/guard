@@ -59,21 +59,12 @@ public enum Message {
     COUNTENTITY_REGION_OUTPUT("§8» §e%entity§8: §c%count"),
     COUNTENTITY_REGION_INVALID("§c%region ist eine ungültige Region."),
     COUNTENTITY_REGION_INVALID_WORLD("§c%world ist eine ungültige Welt."),
-    COUNTENTITY_REGION_MISSING("§cBitte gib eine Region an."),
 
     // GC command
     GC_TPS("§6TPS: %tps"),
     GC_RAM("§6RAM Auslastung: %ram%"),
     GC_WORLDS_HEADER("§8» §7Welt: §fEntities§8, §fTileEntities§8, §fSpieler§8, §fChunks"),
     GC_WORLDS("§8» §7%world: §f%entity§8, §f%tile§8, §f%players§8, §f%chunks"),
-
-    // help command
-    HELP_HEADER("&eDie wichtigsten Grundbefehle:"),
-    HELP_HUB("&a/hub &8» &7Bringt dich zurück in die Lobby."),
-    HELP_IS("&a/is &8» &7Teleportiert dich auf deine Insel. Falls du keine hast, wird eine neue erstellt."),
-    HELP_SPAWN("&a/spawn &8» &7Teleportiert dich zum Spawn."),
-    HELP_MSG("&a/msg <spieler> <nachricht> &8» &7Versendet eine private Nachricht."),
-    HELP_WIKI("&eFür eine ausführliche Befehlsübersicht siehe: &b&nhttps://skybee.gitbook.io/"),
     ;
 
     private final String message;

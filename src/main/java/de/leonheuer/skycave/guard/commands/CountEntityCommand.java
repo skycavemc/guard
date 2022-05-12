@@ -5,7 +5,6 @@ import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import de.leonheuer.skycave.guard.enums.Message;
-import de.leonheuer.skycave.guard.utils.Utils;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -26,7 +25,7 @@ import java.util.List;
 public class CountEntityCommand implements CommandExecutor, TabCompleter {
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String @NotNull [] args) {
         if (args.length == 0) {
             sender.sendMessage(Message.COUNTENTITY_MISSINGARG.getWithPrefix());
             return true;
@@ -42,64 +41,84 @@ public class CountEntityCommand implements CommandExecutor, TabCompleter {
                 return true;
             }
 
-            if (args.length < 2) {
-                sender.sendMessage(Message.COUNTENTITY_REGION_MISSING.getWithPrefix());
-                return true;
-            }
-
-            RegionManager rm = WorldGuard.getInstance().getPlatform().getRegionContainer().get(BukkitAdapter.adapt(world));
-            if (rm == null) {
-                return true;
-            }
-
-
-            ProtectedRegion rg = rm.getRegion(args[1]);
-            if (rg == null) {
-                sender.sendMessage(Message.COUNTENTITY_REGION_INVALID.getWithPrefix()
-                        .replaceAll("%region", args[1])
-                );
-                return true;
-            }
-
-            int villager = 0;
-            int living = 0;
-            int item = 0;
-            int misc = 0;
-
-            for (Entity e : world.getEntities()) {
-                if (rg.contains(BukkitAdapter.asBlockVector(e.getLocation()))) {
-                    if (e instanceof Villager) {
-                        villager++;
-                        continue;
-                    }
-                    if (e instanceof LivingEntity) {
-                        living++;
-                        continue;
-                    }
-                    if (e instanceof Item) {
-                        item++;
-                        continue;
-                    }
-                    misc++;
+            if (args.length >= 2) {
+                RegionManager rm = WorldGuard.getInstance().getPlatform().getRegionContainer().get(BukkitAdapter.adapt(world));
+                if (rm == null) {
+                    return true;
                 }
+                ProtectedRegion rg = rm.getRegion(args[1]);
+                if (rg == null) {
+                    sender.sendMessage(Message.COUNTENTITY_REGION_INVALID.getWithPrefix()
+                            .replaceAll("%region", args[1])
+                    );
+                    return true;
+                }
+
+                if (args.length >= 3) {
+                    EntityType type;
+                    try {
+                        type = EntityType.valueOf(args[2].toUpperCase());
+                    } catch (IllegalArgumentException e) {
+                        sender.sendMessage(Message.COUNTENTITY_INVALID.getWithPrefix()
+                                .replaceAll("%entity", args[2]));
+                        return true;
+                    }
+
+                    int count = 0;
+                    for (Entity e : world.getEntities()) {
+                        if (e.getType() != type) {
+                            continue;
+                        }
+                        if (rg.contains(BukkitAdapter.asBlockVector(e.getLocation()))) count++;
+                    }
+                    sender.sendMessage(Message.COUNTENTITY_REGION_HEADER.getWithPrefix().replaceAll("%region", rg.getId()));
+                    sender.sendMessage(Message.COUNTENTITY_REGION_OUTPUT.getMessage()
+                            .replaceAll("%entity", type.toString())
+                            .replaceAll("%count", String.valueOf(count))
+                    );
+                    return true;
+                }
+
+                int villager = 0;
+                int living = 0;
+                int item = 0;
+                int misc = 0;
+
+                for (Entity e : world.getEntities()) {
+                    if (rg.contains(BukkitAdapter.asBlockVector(e.getLocation()))) {
+                        if (e instanceof Villager) {
+                            villager++;
+                            continue;
+                        }
+                        if (e instanceof LivingEntity) {
+                            living++;
+                            continue;
+                        }
+                        if (e instanceof Item) {
+                            item++;
+                            continue;
+                        }
+                        misc++;
+                    }
+                }
+                sender.sendMessage(Message.COUNTENTITY_REGION_HEADER.getWithPrefix().replaceAll("%region", rg.getId()));
+                sender.sendMessage(Message.COUNTENTITY_REGION_OUTPUT.getMessage()
+                        .replaceAll("%entity", "Villager")
+                        .replaceAll("%count", String.valueOf(villager))
+                );
+                sender.sendMessage(Message.COUNTENTITY_REGION_OUTPUT.getMessage()
+                        .replaceAll("%entity", "Lebewesen")
+                        .replaceAll("%count", String.valueOf(living))
+                );
+                sender.sendMessage(Message.COUNTENTITY_REGION_OUTPUT.getMessage()
+                        .replaceAll("%entity", "Items")
+                        .replaceAll("%count", String.valueOf(item))
+                );
+                sender.sendMessage(Message.COUNTENTITY_REGION_OUTPUT.getMessage()
+                        .replaceAll("%entity", "Sonstiges")
+                        .replaceAll("%count", String.valueOf(misc))
+                );
             }
-            sender.sendMessage(Message.COUNTENTITY_REGION_HEADER.getWithPrefix().replaceAll("%region", rg.getId()));
-            sender.sendMessage(Message.COUNTENTITY_REGION_OUTPUT.getMessage()
-                    .replaceAll("%entity", "Villager")
-                    .replaceAll("%count", String.valueOf(villager))
-            );
-            sender.sendMessage(Message.COUNTENTITY_REGION_OUTPUT.getMessage()
-                    .replaceAll("%entity", "Lebewesen")
-                    .replaceAll("%count", String.valueOf(living))
-            );
-            sender.sendMessage(Message.COUNTENTITY_REGION_OUTPUT.getMessage()
-                    .replaceAll("%entity", "Items")
-                    .replaceAll("%count", String.valueOf(item))
-            );
-            sender.sendMessage(Message.COUNTENTITY_REGION_OUTPUT.getMessage()
-                    .replaceAll("%entity", "Sonstiges")
-                    .replaceAll("%count", String.valueOf(misc))
-            );
             return true;
         }
 
@@ -111,11 +130,9 @@ public class CountEntityCommand implements CommandExecutor, TabCompleter {
                     .replaceAll("%entity", args[0]));
             return true;
         }
-
         sender.sendMessage(Message.COUNTENTITY_HEADER.getWithPrefix()
                 .replaceAll("%entity", StringUtils.capitalize(args[0]))
         );
-
         for (World world : Bukkit.getWorlds()) {
             long count = world.getEntities().stream()
                     .filter(entity -> entity.getType() == type)

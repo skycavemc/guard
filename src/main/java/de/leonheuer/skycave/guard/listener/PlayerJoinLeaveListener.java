@@ -28,24 +28,4 @@ public class PlayerJoinLeaveListener implements Listener {
         main.spectators.remove(event.getPlayer());
     }
 
-    @SuppressWarnings({"UnstableApiUsage", "deprecation"})
-    @EventHandler
-    public void onPlayerKick(PlayerKickEvent event) {
-        event.setCancelled(true);
-
-        main.getDataManager().unloadPlayerData(event.getPlayer().getUniqueId());
-        main.spectators.remove(event.getPlayer());
-
-        ByteArrayDataOutput out = ByteStreams.newDataOutput();
-        out.writeUTF("Connect");
-        out.writeUTF("lobby");
-        event.getPlayer().sendPluginMessage(main, "BungeeCord", out.toByteArray());
-
-        out = ByteStreams.newDataOutput();
-        out.writeUTF("Message");
-        out.writeUTF(event.getPlayer().getName());
-        out.writeUTF("§e§l| §6Lobby §8» §cDu wurdest von SkyBlock gekickt! Grund: §e" + event.getReason());
-        event.getPlayer().sendPluginMessage(main, "BungeeCord", out.toByteArray());
-    }
-
 }
